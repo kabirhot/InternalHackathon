@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx'
 const Roadmap = lazy(() => import('./pages/Roadmap.jsx'))
 const Admin = lazy(() => import('./pages/Admin.jsx'))
 const Privacy = lazy(() => import('./pages/Privacy.jsx'))
+const Contact = lazy(() => import('./pages/Contact.jsx'))
 import NotFound from './pages/NotFound.jsx'
 import Browse from './pages/Browse.jsx'
 import LangChooser, { useLangBar } from './components/LangChooser.jsx'
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </Suspense>
@@ -62,7 +64,7 @@ export default function App() {
             <span>© {new Date().getFullYear()} Civic Navigator · TSEC Internal Hackathon</span>
             <SweepLink to="/privacy" className="hover:text-ink">{t.privacy}</SweepLink>
             <SweepLink to="/admin" className="hover:text-ink">{t.admin}</SweepLink>
-            <SweepLink href="mailto:kabirh2006@gmail.com" className="hover:text-ink">{t.contact}</SweepLink>
+            <SweepLink to="/contact" className="hover:text-ink">{t.contact}</SweepLink>
           </p>
         </div>
       </footer>
