@@ -7,7 +7,9 @@ import { authConfigured, currentSession, signIn, signOut } from '../lib/auth.js'
 export default function Admin() {
   const [session, setSession] = useState(() => currentSession())
   useEffect(() => { document.title = 'Admin review · Civic Navigator' }, [])
-  useEffect(() => { setAdminToken(session?.access_token) }, [session])
+  // Set the token during render, not in an effect: child components' effects run before this component's,
+  // so the queue's first request would otherwise go out without the token, get a 401, and sign the admin out.
+  setAdminToken(session?.access_token)
 
   const needsLogin = isLive && authConfigured && !session
   return (

@@ -22,6 +22,7 @@ class Settings:
         self.cors_origins = _list("CORS_ORIGINS") or [
             "https://civic-navigator-seven.vercel.app",
             "http://localhost:5173",
+            "http://localhost:3000",
             "http://localhost:4173",
         ]
 
