@@ -4,7 +4,7 @@ import { getTask, loadProgress, saveProgress, requestVerification } from '../api
 import RoadmapGraph from '../components/RoadmapGraph.jsx'
 import StepList from '../components/StepList.jsx'
 import StepPanel from '../components/StepPanel.jsx'
-import { stepState, stages } from '../lib/graph.js'
+import { stepState } from '../lib/graph.js'
 import { useLang, tr, fmtDate } from '../lib/i18n.jsx'
 
 export default function Roadmap() {
@@ -67,7 +67,6 @@ export default function Roadmap() {
 
   const pct = Math.round((done.size / task.steps.length) * 100)
   const step = task.steps.find((s) => s.id === selected)
-  const branching = stages(task.steps).some((g) => g.length > 1)
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-8">
@@ -88,14 +87,13 @@ export default function Roadmap() {
             className="min-h-11 underline underline-offset-4 decoration-line hover:decoration-ink">{copied ? t.copied : t.copyLink}</button>
           <button onClick={() => { setView('list'); setTimeout(() => window.print(), 100) }}
             className="min-h-11 underline underline-offset-4 decoration-line hover:decoration-ink">{t.print}</button>
-          {branching && (
-            <div role="tablist" className="hidden md:flex border border-ink/80 rounded-[3px]">
-              {['list', 'graph'].map((v) => (
-                <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}
-                  className={`min-h-10 px-3 ${view === v ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}>{t[v]}</button>
-              ))}
-            </div>
-          )}
+          {/* List / Graph switch for every procedure (linear ones included). */}
+          <div role="tablist" className="flex border border-ink/80 rounded-[3px]">
+            {['list', 'graph'].map((v) => (
+              <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}
+                className={`min-h-10 px-3 ${view === v ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}>{t[v]}</button>
+            ))}
+          </div>
         </div>
       </div>
 
