@@ -16,8 +16,14 @@ log = logging.getLogger(__name__)
 
 def keyword_match(text: str, tasks: list[dict]) -> str | None:
     q = text.lower()
-    scored = sorted(((sum(1 for k in t.get("keywords", []) if k.lower() in q), t["task_id"]) for t in tasks), reverse=True)
-    return scored[0][1] if scored and scored[0][0] > 0 else None
+    # Most keyword hits wins; on a tie, the more specific match (longer matched words) wins,
+    # so "sweet shop" picks food ("sweet shop") over general business ("shop").
+    def score(t: dict) -> tuple[int, int]:
+        hits = [k for k in t.get("keywords", []) if k.lower() in q]
+        return len(hits), sum(len(k) for k in hits)
+
+    scored = sorted(((score(t), t["task_id"]) for t in tasks), reverse=True)
+    return scored[0][1] if scored and scored[0][0][0] > 0 else None
 
 
 def llm_match(text: str, tasks: list[dict], s: Settings) -> str | None:

@@ -70,9 +70,13 @@ export async function searchTask(text, state, city) {
 async function mockSearch(text) {
   await delay()
   const q = text.toLowerCase()
+  // Same rule as backend/app/search.py: most hits wins, then the more specific (longer) matched words.
   const scored = db
-    .map((t) => ({ id: t.task_id, score: t.keywords.filter((k) => q.includes(k)).length }))
-    .sort((a, b) => b.score - a.score)
+    .map((t) => {
+      const hits = t.keywords.filter((k) => q.includes(k.toLowerCase()))
+      return { id: t.task_id, score: hits.length, len: hits.reduce((n, k) => n + k.length, 0) }
+    })
+    .sort((a, b) => b.score - a.score || b.len - a.len)
   return { task_id: scored[0]?.score > 0 ? scored[0].id : null }
 }
 
